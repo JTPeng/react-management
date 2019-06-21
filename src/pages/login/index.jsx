@@ -1,6 +1,6 @@
 /**
  * Created by JTPeng on 2019-06-21 16:10.
- * Description：
+ * Description：login登录模块
  */
 import React,{ Component } from 'react';
 import { Form, Icon, Input, Button } from 'antd';
