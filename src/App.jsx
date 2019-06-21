@@ -4,12 +4,19 @@
  */
 import React,{ Component } from 'react';
 
-import { Button } from 'antd';
+import { Switch,Route } from 'react-router-dom';
 
+import Login from "./pages/login";
+import Main from "./pages/main";
+
+import './asset/index.less';
 export default class App extends Component{
   render() {
     return(
-      <Button type="primary">按钮</Button>
+      <Switch>
+        <Route path="/login" component={Login}/>
+        <Route path="/" component={Main}/>
+      </Switch>
     )
   }
 }
