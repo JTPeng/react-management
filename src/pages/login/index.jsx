@@ -10,12 +10,19 @@ import './index.less';
 const Item = Form.Item;
 
 class Login extends Component{
-  handleSubmit = (e) => {
+  handleSubmit = e => {
     e.preventDefault();
+    this.props.form.validateFields((error,values)=>{
+      console.log(error, values);
+      const { username,password } = values;
+      // 没有错误error则为null,可以收集表单数据
+      // error为objects,代表表单数据有误,不收集表单数据
+      !error ? console.log(`表单数据收集成功${username},${password}`) :console.log(`表单数据有误${error}`);
+    })
   };
   validator = (rule,values,callback) =>{
-    // console.log(rule, values, callback);
-    const name = rule.FullName === 'username' ? '密码':'用户名';
+    console.log(rule, values, callback);
+    const name = rule.fullField === 'username' ? '用户名':'密码';
     if (!values){
       // 没有输入
       callback(`必须输入${name}`);
