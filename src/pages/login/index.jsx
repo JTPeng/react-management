@@ -23,10 +23,29 @@ class Login extends Component{
           <h2>用户登录</h2>
           <Form className="login-form">
             <Item>
-              <Input className="login-input" prefix={<Icon type="user"/>} placeholder="用户名"/>
+              {
+                getFieldDecorator('username',{
+                  // 校验规则
+                  rules:[
+                    {required:true,message:'用户名不能为空'},
+                    {max:15,message:'用户名不能大于15位'},
+                    {min:4,message:'用户名不能小于4位'},
+                    {pattern:/^[a-zA-Z_0-9]+$/,message:'用户名必须由数字,英文字母,下划线组成'}
+                    ]
+                })(<Input className="login-input" prefix={<Icon type="user"/>} placeholder="用户名"/>)
+              }
             </Item>
             <Item>
-              <Input className="login-input" type="password" prefix={<Icon type="lock"/>} placeholder="密码"/>
+              {
+                getFieldDecorator('password',{
+                  rules:[
+                    {required:true,message:'密码不能为空'},
+                    {max:15,message:'密码不能大于15位'},
+                    {min:4,message:'密码不能小于4位'},
+                    {pattern:/^[a-zA-Z_0-9]+$/,message:'密码必须由数字,英文字母,下划线组成'}
+                  ]
+                })(<Input className="login-input" type="password" prefix={<Icon type="lock"/>} placeholder="密码"/>)
+              }
             </Item>
             <Item>
               <Button className="login-btn" type="primary">登录</Button>
