@@ -5,7 +5,7 @@
 import React,{ Component } from 'react';
 import { Form, Icon, Input, Button,message } from 'antd';
 
-import axios from 'axios';
+import ajax from '../../api/ajax';
 
 import logo from './logo.png';
 import './index.less';
@@ -14,14 +14,22 @@ const Item = Form.Item;
 class Login extends Component{
   handleSubmit = e => {
     e.preventDefault();
-    this.props.form.validateFields((error,values)=>{
+    this.props.form.validateFields(async (error,values)=>{
       // console.log(error, values);
       const { username,password } = values;
       // 没有错误error则为null,可以收集表单数据
       // error为objects,代表表单数据有误,不收集表单数据
       if (!error){
         // console.log(`表单数据收集成功${username},${password}`);
-        axios.post('/login',{ username,password })
+        const result = await ajax('/login',{username,password},'post');
+        if (result){
+          message.success('登录成功');
+          this.props.history.replace('/');
+        } else{
+          message.error('登录失败,用户名或密码错误',2);
+          this.props.form.resetFields(['password']);
+        }
+        /*axios.post('/login',{ username,password })
           .then((res) => {
             const { data } = res;
             if (data.status === 0){
@@ -37,14 +45,14 @@ class Login extends Component{
           .catch((err) => {
             message.error(`网络丢失了,请刷新重试`,2);
             this.props.form.resetFields(['password']);
-          })
+          })*/
       } else{
         console.log(`表单数据有误${error}`);
       }
     })
   };
   validator = (rule,values,callback) =>{
-    console.log(rule, values, callback);
+    // console.log(rule, values, callback);
     const name = rule.fullField === 'username' ? '用户名':'密码';
     if (!values){
       // 没有输入
