@@ -6,20 +6,59 @@ import React,{ Component } from 'react';
 import {Icon, Menu} from "antd";
 import {Link} from 'react-router-dom';
 import logo from '../../asset/images/logo.png';
+import MenuList from '../../config/menu-list';
 import './index.less';
 const {SubMenu,Item} = Menu;
 
 export default class LeftNav extends Component{
+  componentWillMount() {
+    this.menuList = MenuList.map((menu) => {
+      if (menu.children){
+        // 二级菜单与一级菜单区别是拥有children属性
+        return (
+          <SubMenu
+            key={menu.key}
+            title={
+              <span>
+                <Icon type={ menu.key } />
+                <span>{ menu.title }</span>
+            </span>
+            }
+          >
+            {
+              menu.children.map((item) => {
+                return <Item key={item.key}>
+                  <Icon type={item.key}/>
+                  <span>{item.title}</span>
+                </Item>
+              })
+            }
+          </SubMenu>
+        )
+      } else {
+        return (
+          <Item key={menu.key}>
+            <Icon type={menu.key}/>
+            <span>{menu.title}</span>
+          </Item>
+        )
+      }
+    });
+  }
+
   render() {
-    const {collapsed} = this.props;
+    const { collapsed } = this.props;
     return(
       <div>
         <Link className="left-nav-logo" to='/home'>
-          <img src={logo} alt="logo"/>
+          <img src={ logo } alt="logo"/>
           <h1 style={{display: collapsed ? 'none' : 'block'}}>硅谷后台</h1>
         </Link>
         <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
-          <Item key="1">
+          {
+            this.menuList
+          }
+          {/*<Item key="1">
             <Icon type="home" />
             <span>首页</span>
           </Item>
@@ -70,7 +109,7 @@ export default class LeftNav extends Component{
               <Icon type="pie-chart" />
               <span>饼图</span>
             </Item>
-          </SubMenu>
+          </SubMenu>*/}
         </Menu>
       </div>
     )

@@ -31,7 +31,7 @@ export default class Main extends Component{
             <HeaderMain/>
           </Header>
           <Content style={{ margin: '25px 16px' }}>
-            <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>Bill is a cat.</div>
+            <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>欢迎登录！</div>
           </Content>
           <Footer style={{ textAlign: 'center' }}>推荐使用谷歌浏览器，可以获得更佳页面操作体验</Footer>
         </Layout>
