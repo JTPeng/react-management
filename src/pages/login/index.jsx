@@ -3,7 +3,9 @@
  * Description：login登录模块
  */
 import React,{ Component } from 'react';
-import { Form, Icon, Input, Button } from 'antd';
+import { Form, Icon, Input, Button,message } from 'antd';
+
+import axios from 'axios';
 
 import logo from './logo.png';
 import './index.less';
@@ -13,11 +15,32 @@ class Login extends Component{
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((error,values)=>{
-      console.log(error, values);
+      // console.log(error, values);
       const { username,password } = values;
       // 没有错误error则为null,可以收集表单数据
       // error为objects,代表表单数据有误,不收集表单数据
-      !error ? console.log(`表单数据收集成功${username},${password}`) :console.log(`表单数据有误${error}`);
+      if (!error){
+        // console.log(`表单数据收集成功${username},${password}`);
+        axios.post('/login',{ username,password })
+          .then((res) => {
+            const { data } = res;
+            if (data.status === 0){
+              message.success(`欢迎${data.data.username}登录`);
+              // 登录成功后 页面跳转到main主页
+              //
+              this.props.history.replace('/');
+            } else{
+              message.error(`${data.msg}`);
+              this.props.form.resetFields(['password']);
+            }
+          })
+          .catch((err) => {
+            message.error(`网络丢失了,请刷新重试`,2);
+            this.props.form.resetFields(['password']);
+          })
+      } else{
+        console.log(`表单数据有误${error}`);
+      }
     })
   };
   validator = (rule,values,callback) =>{
@@ -46,7 +69,7 @@ class Login extends Component{
           <img src={logo} alt=""/>
           <h1>React项目:后台管理系统</h1>
         </header>
-        <section className="login-content" >
+        <section className="login-content">
           <h2>用户登录</h2>
           <Form className="login-form" onSubmit={ this.handleSubmit }>
             <Item>

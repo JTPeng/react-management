@@ -24,3 +24,12 @@
   * 产生冲突：
     * 版本回退：git reset --hard HEAD^  然后在更新
     * 删库，重新克隆
+## 2.Login页面
+  * 使用react-ui 组件库 => antd
+    * From 表单组件 
+  * SPA应用使用react-router-dom
+    * 最外层的组件包裹一层 BrowserRouter
+    * 使用的路由组件有：
+      * <Switch/>
+      * <Route/>
+      * <Redirect/>

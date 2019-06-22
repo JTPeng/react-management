@@ -9,7 +9,7 @@ import { Switch,Route } from 'react-router-dom';
 import Login from "./pages/login";
 import Main from "./pages/main";
 
-import './asset/index.less';
+import './asset/less/index.less';
 export default class App extends Component{
   render() {
     return(
