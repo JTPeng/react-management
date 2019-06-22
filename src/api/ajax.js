@@ -8,11 +8,11 @@ import {message} from "antd";
 /**
  *
  * @param url  请求地址
- * @param data 参数
- * @param method 请求方式
+ * @param data 传输数据 默认是post格式
+ * @param method 请求方式 默认是get请求
+ * @returns {Q.Promise<any> | Promise<T | never>} 成功状态下返回值是一个Promise对象,失败状态不会返回Promise对象
  */
 export default function ajax(url,data = {},method = 'get') {
-  let reqParams = data;
   // 将接受的请求方式全部转换成大写
   method = method.toLowerCase();
   // 对请求方式处理

@@ -4,4 +4,10 @@
  */
 import ajax from './ajax';
 
+/**
+ *
+ * @param username 用户名
+ * @param password 密码
+ * @returns {Q.Promise<any>|Promise<T|never>} 成功状态下返回一个Promise对象,失败不返回Promise对象
+ */
 export const reqLogin = (username,password) => ajax('/login',{username,password},'post');

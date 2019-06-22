@@ -7,7 +7,7 @@ import { Form, Icon, Input, Button,message } from 'antd';
 
 import { reqLogin } from '../../api';
 
-import logo from './logo.png';
+import logo from '../../asset/images/logo.png';
 import './index.less';
 const Item = Form.Item;
 
