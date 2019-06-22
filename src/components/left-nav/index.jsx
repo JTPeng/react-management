@@ -4,14 +4,23 @@
  */
 import React,{ Component } from 'react';
 import {Icon, Menu} from "antd";
-import {Link} from 'react-router-dom';
+import {Link,withRouter} from 'react-router-dom';
 import logo from '../../asset/images/logo.png';
 import MenuList from '../../config/menu-list';
 import './index.less';
 const {SubMenu,Item} = Menu;
 
-export default class LeftNav extends Component{
+class LeftNav extends Component{
+  changMenu = (menu) =>{
+    return <Item key={menu.key}>
+      <Link to={menu.key}>
+        <Icon type={menu.icon}/>
+        <span>{menu.title}</span>
+      </Link>
+    </Item>
+  };
   componentWillMount() {
+    const { pathname } = this.props.location;
     this.menuList = MenuList.map((menu) => {
       if (menu.children){
         // 二级菜单与一级菜单区别是拥有children属性
@@ -20,30 +29,28 @@ export default class LeftNav extends Component{
             key={menu.key}
             title={
               <span>
-                <Icon type={ menu.key } />
+                <Icon type={ menu.icon } />
                 <span>{ menu.title }</span>
-            </span>
+              </span>
             }
           >
             {
               menu.children.map((item) => {
-                return <Item key={item.key}>
-                  <Icon type={item.key}/>
-                  <span>{item.title}</span>
-                </Item>
+                // 二级菜单展开
+                if (item.key === pathname){
+                  this.openKey = menu.key;
+                }
+                return this.changMenu(item)
               })
             }
           </SubMenu>
         )
       } else {
-        return (
-          <Item key={menu.key}>
-            <Icon type={menu.key}/>
-            <span>{menu.title}</span>
-          </Item>
-        )
+        return this.changMenu(menu);
       }
     });
+
+    this.selectKey = pathname;
   }
 
   render() {
@@ -54,7 +61,7 @@ export default class LeftNav extends Component{
           <img src={ logo } alt="logo"/>
           <h1 style={{display: collapsed ? 'none' : 'block'}}>硅谷后台</h1>
         </Link>
-        <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
+        <Menu theme="dark" defaultSelectedKeys={[this.selectKey]} defaultOpenKeys={[ this.openKey ]} mode="inline">
           {
             this.menuList
           }
@@ -115,3 +122,4 @@ export default class LeftNav extends Component{
     )
   }
 }
+export default withRouter(LeftNav);
