@@ -5,7 +5,7 @@
 import React,{ Component } from 'react';
 import { Form, Icon, Input, Button,message } from 'antd';
 
-import ajax from '../../api/ajax';
+import { reqLogin } from '../../api';
 
 import logo from './logo.png';
 import './index.less';
@@ -21,14 +21,22 @@ class Login extends Component{
       // error为objects,代表表单数据有误,不收集表单数据
       if (!error){
         // console.log(`表单数据收集成功${username},${password}`);
-        const result = await ajax('/login',{username,password},'post');
+        const result = await reqLogin(username,password);
+        if (result){
+          message.success('登录成功');
+          this.props.history.replace('/');
+        } else{
+          // message.error('登录失败,用户名或密码错误',2);
+          this.props.form.resetFields(['password']);
+        }
+        /*const result = await ajax('/login',{username,password},'post');
         if (result){
           message.success('登录成功');
           this.props.history.replace('/');
         } else{
           message.error('登录失败,用户名或密码错误',2);
           this.props.form.resetFields(['password']);
-        }
+        }*/
         /*axios.post('/login',{ username,password })
           .then((res) => {
             const { data } = res;
