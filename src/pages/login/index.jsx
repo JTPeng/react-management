@@ -5,6 +5,7 @@
 import React from 'react';
 import { Form, Icon, Input, Button,message } from 'antd';
 
+import { setItem } from '../../utils/storage-tools';
 import { reqLogin } from '../../api';
 
 import logo from '../../asset/images/logo.png';
@@ -25,6 +26,9 @@ function Login(props){
         const result = await reqLogin(username,password);
         if (result){
           message.success('登录成功');
+          // localStorage.setItem('USER_KEY',JSON.stringify(result));
+          // 使用localStorage 设置登录信息和过期时间
+          setItem(result);
           props.history.replace('/');
         } else{
           // message.error('登录失败,用户名或密码错误',2);

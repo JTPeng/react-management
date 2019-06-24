@@ -3,6 +3,7 @@
  * Description：
  */
 import React,{ Component } from 'react';
+
 import MyButton from '../my-button';
 
 import logo from '../../asset/images/logo.png';

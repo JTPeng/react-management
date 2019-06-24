@@ -5,12 +5,18 @@
 import React,{ Component } from 'react';
 import {Icon, Menu} from "antd";
 import {Link,withRouter} from 'react-router-dom';
+import PropTypes from 'prop-types';
+
+
 import logo from '../../asset/images/logo.png';
 import MenuList from '../../config/menu-list';
 import './index.less';
 const {SubMenu,Item} = Menu;
 
 class LeftNav extends Component{
+  static propTypes = {
+    collapsed:PropTypes.bool.isRequired,
+  };
   changMenu = (menu) =>{
     return <Item key={menu.key}>
       <Link to={menu.key}>
