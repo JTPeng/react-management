@@ -4,7 +4,16 @@
  */
 import React,{ Component } from 'react';
 import { Layout } from 'antd';
+import Category from '../category';
+import Pie from '../charts/pie';
+import Line from '../charts/line';
+import Bar from '../charts/bar';
+import Home from '../home';
+import Product from '../product';
+import Role from '../role';
+import User from '../user';
 
+import { Switch,Route,Redirect } from 'react-router-dom';
 import LeftNav from '../../components/left-nav';
 import HeaderMain from '../../components/header-main';
 import { getItem } from '../../utils/storage-tools';
@@ -20,13 +29,23 @@ export default class Main extends Component{
     console.log(collapsed);
     this.setState({ collapsed });
   };
-  componentWillMount() {
-    const result = getItem();
-    if (!result || !result._id){
-      const user = reqValidateUser(result._id);
-      if (!user) return;
+  async componentWillMount() {
+    const user = getItem();
+    /*if (!result || !result._id){
+      // 没有返回数据或者id就返回login登录页
       this.props.history.replace('/login');
+    } else {
+      // 登录成功仍需验证，验证其id是否是被修改过的
+      const user = reqValidateUser(result._id);
+      if (!user){
+        this.props.history.replace('/login');
+      }
+    }*/
+    if (user && user._id){
+      const result = await reqValidateUser(user._id);
+      if (result) return;
     }
+    this.props.history.replace('/login');
   }
 
   render() {
@@ -41,7 +60,19 @@ export default class Main extends Component{
             <HeaderMain/>
           </Header>
           <Content style={{ margin: '25px 16px' }}>
-            <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>欢迎登录！</div>
+            <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
+              <Switch>
+                <Route path="/home" component={Home}/>
+                <Route path="/category" component={Category}/>
+                <Route path="/product" component={Product}/>
+                <Route path="/user" component={User}/>
+                <Route path="/role" component={Role}/>
+                <Route path="/charts/line" component={Line}/>
+                <Route path="/charts/bar" component={Bar}/>
+                <Route path="/charts/pie" component={Pie}/>
+                <Redirect to="/home"/>
+              </Switch>
+            </div>
           </Content>
           <Footer style={{ textAlign: 'center' }}>推荐使用谷歌浏览器，可以获得更佳页面操作体验</Footer>
         </Layout>

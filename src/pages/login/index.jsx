@@ -13,7 +13,7 @@ import './index.less';
 const Item = Form.Item;
 
 function Login(props){
-  console.log(props);
+  // console.log(props);
   const handleSubmit = e => {
     e.preventDefault();
     props.form.validateFields(async (error,values)=>{
