@@ -58,4 +58,18 @@ export const reqWeather = function() {
  */
 export const reqCategory = (parentId) => ajax('/manage/category/list',{parentId});
 
+/**
+ * 新增品类
+ * @param parentId
+ * @param categoryName
+ * @returns {Q.Promise<any>|Promise<T|never>}
+ */
 export const reqAddCategory = (parentId,categoryName) => ajax('/manage/category/add',{parentId,categoryName},'POST');
+
+/**
+ * 修改商品名称
+ * @param categoryId
+ * @param categoryName
+ * @returns {Q.Promise<any>|Promise<T|never>}
+ */
+export const reqUpdateCategory = (categoryId,categoryName) => ajax('/manage/category/update',{categoryId,categoryName},'POST');
