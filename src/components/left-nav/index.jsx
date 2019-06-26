@@ -27,6 +27,7 @@ class LeftNav extends Component{
   };
   componentWillMount() {
     const { pathname } = this.props.location;
+    let isHome = true;
     this.menuList = MenuList.map((menu) => {
       if (menu.children){
         // 二级菜单与一级菜单区别是拥有children属性
@@ -45,6 +46,7 @@ class LeftNav extends Component{
                 // 二级菜单展开
                 if (item.key === pathname){
                   this.openKey = menu.key;
+                  isHome = false;
                 }
                 return this.changMenu(item)
               })
@@ -52,11 +54,13 @@ class LeftNav extends Component{
           </SubMenu>
         )
       } else {
+        if (menu.key === pathname) isHome = false;
         return this.changMenu(menu);
       }
     });
-
-    this.selectKey = pathname;
+    // this.selectKey = pathname;
+    // 初始化选中菜单
+    this.selectKey = isHome ? '/home' :  pathname;
   }
 
   render() {

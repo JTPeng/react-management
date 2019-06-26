@@ -46,19 +46,28 @@ class HeaderMain extends Component{
   }
 
   async componentDidMount() {
-    setInterval(() => {
+    this.timeId = setInterval(() => {
       this.setState({
         sysTime:Date.now()
       })
     },1000);
     // 返回的是一个函数
-     const result = await reqWeather();
+     const {promise,cancel} =  reqWeather();
+     this.cancel = cancel;
+     const result = await promise;
      if (result){
         this.setState(result);
      }
   }
+    componentWillUnmount() {
+    // 取消ajax请求
+    this.cancel();
+    // 清除定时器
+    clearInterval(this.timeId);
+  }
+
   getTitle = (nextProps) => {
-    console.log('getTitle()');
+/*    console.log('getTitle()');*/
     const { pathname }  = nextProps.location;
     for (let i = 0; i < menuList.length ; i++) {
       const menu = menuList[i];

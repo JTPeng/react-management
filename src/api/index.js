@@ -25,20 +25,37 @@ export const reqValidateUser = (id) => ajax('/validate/user',{id},'POST');
  * @returns {Promise<any>}
  */
 export const reqWeather = function() {
-  return new Promise((resolve, reject) => {
-    jsonp('http://api.map.baidu.com/telematics/v3/weather?location=深圳&output=json&ak=3p49MVra6urFRGOT9s8UBWr2',{},(err,data) =>{
-      if (!err){
-        const { dayPictureUrl,weather } = data.results[0].weather_data[0];
-        resolve({
-          weatherImg: dayPictureUrl,
-          weather
-        });
-      } else{
-        message.error(`请求数据失败~请刷新重试!`);
+  let cancel = null;
+
+  const promise = new Promise((resolve, reject) => {
+    cancel = jsonp('http://api.map.baidu.com/telematics/v3/weather?location=深圳&output=json&ak=3p49MVra6urFRGOT9s8UBWr2',{},(err,data) =>{
+      try {
+        if (!err){
+          const { dayPictureUrl,weather } = data.results[0].weather_data[0];
+          resolve({
+            weatherImg: dayPictureUrl,
+            weather
+          });
+        } else{
+          message.error(`请求数据失败~请刷新重试!`);
+          resolve();
+        }
+      }catch (e) {
+        message.error('请求天气信息失败~请刷新试试~');
         resolve();
       }
     });
   });
+  return {
+    cancel,
+    promise
+  }
 };
+/**
+ * 查询分类功能
+ * @param parentId
+ * @returns {Q.Promise<any>|Promise<T|never>}
+ */
+export const reqCategory = (parentId) => ajax('/manage/category/list',{parentId});
 
-export const  reqCategory = (parentId) => ajax('/manage/category/list',{parentId});
+export const reqAddCategory = (parentId,categoryName) => ajax('/manage/category/add',{parentId,categoryName},'POST');
