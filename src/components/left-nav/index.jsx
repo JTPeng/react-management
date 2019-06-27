@@ -26,7 +26,12 @@ class LeftNav extends Component{
     </Item>
   };
   componentWillMount() {
-    const { pathname } = this.props.location;
+    let { pathname } = this.props.location;
+    // 匹配product后的三级路由
+    const productReg = /^\/product\//;
+    if (productReg.test(pathname)){
+      pathname = pathname.slice(0,8);
+    }
     let isHome = true;
     this.menuList = MenuList.map((menu) => {
       if (menu.children){

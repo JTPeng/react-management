@@ -68,7 +68,12 @@ class HeaderMain extends Component{
 
   getTitle = (nextProps) => {
 /*    console.log('getTitle()');*/
-    const { pathname }  = nextProps.location;
+    let { pathname }  = nextProps.location;
+    // 匹配product后的三级路由
+    const productReg = /^\/product\//;
+    if (productReg.test(pathname)){
+      pathname = pathname.slice(0,8);
+    }
     for (let i = 0; i < menuList.length ; i++) {
       const menu = menuList[i];
       if (menu.children){
