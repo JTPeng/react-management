@@ -97,3 +97,7 @@ export const reqProducts = (pageNum,pageSize) =>
  */
 export const reqAddProduct = ({name, desc, price, categoryId, pCategoryId, detail}) =>
   ajax('/manage/product/add', {name, desc, price, categoryId, pCategoryId, detail}, 'POST');
+
+export const reqUpdateProduct = ({name, desc, price, categoryId, pCategoryId, detail,_id}) =>
+  ajax('/manage/product/update', {name, desc, price, categoryId, pCategoryId, detail,_id}, 'POST');
+

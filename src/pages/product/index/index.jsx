@@ -16,9 +16,11 @@ export default class Index extends Component{
     total:0,
     loading:true
   };
+
   componentDidMount() {
     this.getProducts(1,3);
   }
+
   getProducts = async (pageNum,pageSize) => {
     this.setState({
       loading:true,
@@ -32,9 +34,18 @@ export default class Index extends Component{
       })
     }
   };
+
   showAddProduct = () => {
     this.props.history.push('/product/saveupdate');
   };
+
+  showUpdateProduct = (product) => {
+    return () => {
+      // push 第二个参数为传递的数据
+      this.props.history.push('/product/saveupdate',product);
+    };
+  };
+
   render() {
     const columns = [
       {
@@ -65,7 +76,7 @@ export default class Index extends Component{
         render: (product) => {
           return <div>
             <MyButton>详情</MyButton>
-            <MyButton>修改</MyButton>
+            <MyButton onClick={this.showUpdateProduct(product)}>修改</MyButton>
           </div>
         }
       },

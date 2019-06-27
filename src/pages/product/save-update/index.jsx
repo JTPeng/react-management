@@ -4,10 +4,11 @@
  */
 import React,{ Component } from 'react';
 import { Card, Icon, Form, Input, Button, Cascader, InputNumber  } from 'antd';
-import {reqAddProduct, reqCategory} from '../../../api';
+import {reqAddProduct, reqCategory,reqUpdateProduct} from '../../../api';
 import RichTextEditor from './rich-text-editor';
 import draftToHtml from 'draftjs-to-html';
 import {convertToRaw} from "draft-js";
+import PictureWall from './picture-wall';
 import './index.less';
 const { Item } = Form;
 class SaveUpdate extends Component{
@@ -15,19 +16,53 @@ class SaveUpdate extends Component{
     options:[]
   };
   richTextDetailRef = React.createRef();
-  async componentDidMount() {
-    const result = await reqCategory('0');
+
+  getCategories = async (parentId) => {
+    const result = await reqCategory(parentId);
     if (result){
-      this.setState({
-        options:result.map((item) => {
-          return {
-            value:item._id,
-            label:item.name,
-            isLeaf: false,
-          }
+      // 区分一二级分类
+      if (parentId === '0'){
+        this.setState({
+          options:result.map((item) => {
+            return {
+              value:item._id,
+              label:item.name,
+              isLeaf: false,
+            }
+          })
         })
-      })
+      } else{
+        this.setState({
+          options:this.state.options.map((item) => {
+            if (item.value === parentId) {
+              item.children = result.map((item) => {
+                return {
+                  value: item._id,
+                  label: item.name
+                }
+              })
+            }
+            return item;
+          })
+        })
+      }
+
     }
+  };
+
+  componentDidMount() {
+    this.getCategories('0');
+    const product = this.props.location.state;
+    let categoriesId = [];
+    if (product){
+      if (product.pCategoryId !== '0'){
+        categoriesId.push(product.pCategoryId);
+        // 请求二级分类数据
+        this.getCategories(product.pCategoryId);
+      }
+      categoriesId.push(product.categoryId);
+    }
+    this.categoriesId = categoriesId;
   }
 
   loadData = async selectedOptions => {
@@ -68,7 +103,18 @@ class SaveUpdate extends Component{
           pCategoryId = categoriesId[0];
           categoryId = categoriesId[1];
         }
-        const result = await reqAddProduct({name, desc, price,categoryId,pCategoryId,detail});
+        let promise = null;
+        const product = this.props.location.state;
+        const options = {name, desc, price,categoryId,pCategoryId,detail};
+        if (this.props.location.state){
+          options._id = product._id;
+          // 修改
+          promise = await reqUpdateProduct(options);
+        } else{
+          // 添加
+          promise = await reqAddProduct(options);
+        }
+        const result = await promise;
         if (result){
           this.props.history.push('/product/index');
         }
@@ -81,6 +127,8 @@ class SaveUpdate extends Component{
   render() {
     const { options } = this.state;
     const { getFieldDecorator } = this.props.form;
+    const product = this.props.location.state;
+
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },
@@ -104,7 +152,8 @@ class SaveUpdate extends Component{
                 {
                   rules:[
                     {required:true,message:'请输入商品名称'}
-                  ]
+                  ],
+                  initialValue: product ? product.name : ''
                 }
               )(
                 <Input placeholder="请输入商品名称"/>
@@ -119,7 +168,8 @@ class SaveUpdate extends Component{
                 {
                   rules:[
                     {required:true,message:'请输入商品描述'}
-                  ]
+                  ],
+                  initialValue: product ? product.desc : ''
                 }
               )(<Input placeholder="请输入商品描述"/>)
             }
@@ -131,7 +181,8 @@ class SaveUpdate extends Component{
                 {
                   rules:[
                     {required:true,message:'请选择分类'}
-                  ]
+                  ],
+                  initialValue:this.categoriesId,
                 }
               )(
                 <Cascader
@@ -151,7 +202,8 @@ class SaveUpdate extends Component{
                 {
                   rules:[
                     {required:true,message:'请输入商品价格'}
-                  ]
+                  ],
+                  initialValue: product ? product.price : ''
                 }
               )(
                 <InputNumber
@@ -164,8 +216,11 @@ class SaveUpdate extends Component{
             }
 
           </Item>
+          <Item label="商品图片" wrapperCol={{span: 20}}>
+            <PictureWall />
+          </Item>
           <Item label="商品详情" wrapperCol={{span: 20}}>
-            <RichTextEditor ref={this.richTextDetailRef}/>
+            <RichTextEditor ref={this.richTextDetailRef} detail={product ? product.detail : ''}/>
           </Item>
           <Item>
             <Button type="primary" className="add-product-btn" htmlType="submit">提交</Button>

@@ -7,7 +7,7 @@ import { Route,Redirect,Switch } from 'react-router-dom';
 
 import Index from './index/index';
 import Detail from './detail';
-import SaveUpdate from './saveupdate';
+import SaveUpdate from './save-update';
 export default class Product extends Component{
   render() {
     return(
