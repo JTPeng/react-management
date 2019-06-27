@@ -64,7 +64,8 @@ export const reqCategory = (parentId) => ajax('/manage/category/list',{parentId}
  * @param categoryName
  * @returns {Q.Promise<any>|Promise<T|never>}
  */
-export const reqAddCategory = (parentId,categoryName) => ajax('/manage/category/add',{parentId,categoryName},'POST');
+export const reqAddCategory = (parentId,categoryName) =>
+  ajax('/manage/category/add',{parentId,categoryName},'POST');
 
 /**
  * 修改商品名称
@@ -72,4 +73,13 @@ export const reqAddCategory = (parentId,categoryName) => ajax('/manage/category/
  * @param categoryName
  * @returns {Q.Promise<any>|Promise<T|never>}
  */
-export const reqUpdateCategory = (categoryId,categoryName) => ajax('/manage/category/update',{categoryId,categoryName},'POST');
+export const reqUpdateCategory = (categoryId,categoryName) =>
+  ajax('/manage/category/update',{categoryId,categoryName},'POST');
+
+/**
+ * 获取商品分类列表
+ * @param pageNum
+ * @param pageSize
+ * @returns {Q.Promise<any>|Promise<T|never>}
+ */
+export const reqProducts = (pageNum,pageSize) => ajax('/manage/product/list',{pageNum,pageSize});
