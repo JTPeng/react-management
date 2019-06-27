@@ -82,4 +82,18 @@ export const reqUpdateCategory = (categoryId,categoryName) =>
  * @param pageSize
  * @returns {Q.Promise<any>|Promise<T|never>}
  */
-export const reqProducts = (pageNum,pageSize) => ajax('/manage/product/list',{pageNum,pageSize});
+export const reqProducts = (pageNum,pageSize) =>
+  ajax('/manage/product/list',{pageNum,pageSize});
+
+/**
+ * 添加商品
+ * @param name
+ * @param desc
+ * @param price
+ * @param categoryId
+ * @param pCategoryId
+ * @param detail
+ * @returns {Q.Promise<any>|Promise<T|never>}
+ */
+export const reqAddProduct = ({name, desc, price, categoryId, pCategoryId, detail}) =>
+  ajax('/manage/product/add', {name, desc, price, categoryId, pCategoryId, detail}, 'POST');

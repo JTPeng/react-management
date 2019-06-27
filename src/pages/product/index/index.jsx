@@ -13,15 +13,25 @@ const { Option } = Select;
 export default class Index extends Component{
   state = {
     products:[],
+    total:0,
+    loading:true
   };
-  async componentDidMount() {
-    const result = await reqProducts(1,3);
+  componentDidMount() {
+    this.getProducts(1,3);
+  }
+  getProducts = async (pageNum,pageSize) => {
+    this.setState({
+      loading:true,
+    });
+    const result = await reqProducts(pageNum,pageSize);
     if (result){
       this.setState({
-        products:result.list
+        total:result.total,
+        products:result.list,
+        loading:false,
       })
     }
-  }
+  };
   showAddProduct = () => {
     this.props.history.push('/product/saveupdate');
   };
@@ -74,7 +84,7 @@ export default class Index extends Component{
         status:1,
       }
     ];*/
-    const {products} = this.state;
+    const {products,total,loading} = this.state;
     return(
       <Card
         title={
@@ -97,8 +107,13 @@ export default class Index extends Component{
             showQuickJumper: true,
             showSizeChanger: true,
             pageSizeOptions: ['3', '6', '9', '12'],
-            defaultPageSize: 3
+            defaultPageSize: 3,
+            total,
+            onChange:this.getProducts,
+            onShowSizeChange:this.getProducts,
           }}
+          rowKey="_id"
+          loading={loading}
         />
       </Card>
     )
