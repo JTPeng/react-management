@@ -3,9 +3,9 @@
  * Description：
  */
 import React,{ Component } from 'react';
-import {Card,Select,Input,Icon,Button,Table} from "antd";
+import {Card,Select,Input,Icon,Button,Table,message} from "antd";
 import MyButton from '../../../components/my-button';
-import { reqProducts } from '../../../api';
+import { reqProducts,reqSearchProduct } from '../../../api';
 import './index.less';
 
 const { Option } = Select;
@@ -14,7 +14,11 @@ export default class Index extends Component{
   state = {
     products:[],
     total:0,
-    loading:true
+    loading:true,
+    searchType: 'productName',
+    searchContent: '',
+    pageSize: 3,
+    pageNum: 1
   };
 
   componentDidMount() {
@@ -25,12 +29,23 @@ export default class Index extends Component{
     this.setState({
       loading:true,
     });
-    const result = await reqProducts(pageNum,pageSize);
+    const {searchContent,searchType} = this.state;
+    let promise = null;
+    if (this.isSearch && searchContent){
+      promise = reqSearchProduct({
+        searchType, searchContent, pageSize, pageNum
+      });
+    }else{
+      promise = reqProducts(pageNum,pageSize);
+    }
+    const result = await promise;
     if (result){
       this.setState({
         total:result.total,
         products:result.list,
         loading:false,
+        pageNum,
+        pageSize
       })
     }
   };
@@ -46,6 +61,34 @@ export default class Index extends Component{
     };
   };
 
+  // 商品受控组件
+  handleChange = targetName => {
+    return e => {
+      let value = '';
+      if (targetName === 'searchType'){
+        value = e;
+      }else{
+        value = e.target.value;
+        if (!value) this.isSearch = false;
+      }
+      this.setState({
+        [targetName]:e.target.value,
+      });
+    }
+  };
+
+  // 搜索商品
+  search = () => {
+    // 搜集数据
+    const {searchContent,pageNum,pageSize} = this.state;
+    // 发送请求
+    if(searchContent){
+      this.isSearch = true;
+      this.getProducts(pageNum,pageSize);
+    }else{
+      message.warn('请输入搜索内容！')
+    }
+  };
   render() {
     const columns = [
       {
@@ -100,12 +143,12 @@ export default class Index extends Component{
       <Card
         title={
           <div>
-            <Select defaultValue={0}>
-              <Option key={0} value={0}>根据商品名称</Option>
-              <Option key={1} value={1}>根据商品描述</Option>
+            <Select defaultValue='productName' onChange={this.handleChange('searchType')}>
+              <Option key={0} value='productName'>根据商品名称</Option>
+              <Option key={1} value='productDesc'>根据商品描述</Option>
             </Select>
-            <Input placeholder="关键字" className="search-input"/>
-            <Button type="primary">搜索</Button>
+            <Input placeholder="关键字" className="search-input" onChange={this.handleChange('searchContent')}/>
+            <Button type="primary" onClick={this.search}>搜索</Button>
           </div>
         }
         extra={<Button type="primary" onClick={this.showAddProduct} ><Icon type="plus"/>添加商品</Button>}

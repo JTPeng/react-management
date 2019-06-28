@@ -119,3 +119,5 @@ export const reqUpdateProduct = ({name, desc, price, categoryId, pCategoryId, de
  * @returns {Q.Promise<any>|Promise<T|never>}
  */
 export const reqDeleteProductImg = (name, id) => ajax('/manage/img/delete', {name, id}, 'POST');
+
+export const reqSearchProduct = ({searchType,searchContent,pageNum,pageSize}) => ajax('/manage/product/search', {[searchType]:searchContent,pageNum,pageSize});

@@ -34,7 +34,6 @@ export default class PicturesWall extends Component {
   };
 
   handleChange = async ({ file, fileList }) => {
-    console.log(file);
     if (file.status === 'uploading') {
       // 上传中
 
