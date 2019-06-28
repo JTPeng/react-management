@@ -120,4 +120,54 @@ export const reqUpdateProduct = ({name, desc, price, categoryId, pCategoryId, de
  */
 export const reqDeleteProductImg = (name, id) => ajax('/manage/img/delete', {name, id}, 'POST');
 
+/**
+ *
+ * @param searchType
+ * @param searchContent
+ * @param pageNum
+ * @param pageSize
+ * @returns {Q.Promise<any>|Promise<T|never>}
+ */
 export const reqSearchProduct = ({searchType,searchContent,pageNum,pageSize}) => ajax('/manage/product/search', {[searchType]:searchContent,pageNum,pageSize});
+
+/**
+ *
+ * @returns {Q.Promise<any>|Promise<T|never>}
+ */
+export const reqRoleList = () => ajax('/manage/role/list');
+
+/**
+ *
+ * @param name
+ * @returns {Q.Promise<any>|Promise<T|never>}
+ */
+export const reqAddRole = (name) => ajax('/manage/role/add',{name},'POST');
+
+/**
+ *
+ * @param _id
+ * @param auth_name
+ * @param menus
+ * @returns {Q.Promise<any>|Promise<T|never>}
+ */
+export const reqUpdateRole = (_id,auth_name,menus) => ajax('/manage/role/update',{_id,auth_name,menus},'POST');
+
+/**
+ *
+ * @returns {Q.Promise<any>|Promise<T|never>}
+ */
+export const reqGetUsers = () => ajax('/manage/user/list');
+
+/**
+ *
+ * @param username
+ * @param password
+ * @param phone
+ * @param email
+ * @param role_id
+ * @returns {Q.Promise<any>|Promise<T|never>}
+ */
+export const reqAddUser = ({username, password, phone, email, role_id}) =>
+  ajax('/manage/user/add', {username, password, phone, email, role_id}, 'POST');
+
+

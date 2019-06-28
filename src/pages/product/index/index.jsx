@@ -72,7 +72,7 @@ export default class Index extends Component{
         if (!value) this.isSearch = false;
       }
       this.setState({
-        [targetName]:e.target.value,
+        [targetName]:value,
       });
     }
   };
@@ -81,7 +81,7 @@ export default class Index extends Component{
   search = () => {
     // 搜集数据
     const {searchContent,pageNum,pageSize} = this.state;
-    // 发送请求
+    // 发送请求(搜索框有内容才发送请求)
     if(searchContent){
       this.isSearch = true;
       this.getProducts(pageNum,pageSize);
@@ -147,7 +147,10 @@ export default class Index extends Component{
               <Option key={0} value='productName'>根据商品名称</Option>
               <Option key={1} value='productDesc'>根据商品描述</Option>
             </Select>
-            <Input placeholder="关键字" className="search-input" onChange={this.handleChange('searchContent')}/>
+            <Input
+              placeholder="关键字"
+              className="search-input"
+              onChange={this.handleChange('searchContent')}/>
             <Button type="primary" onClick={this.search}>搜索</Button>
           </div>
         }
