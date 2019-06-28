@@ -98,6 +98,24 @@ export const reqProducts = (pageNum,pageSize) =>
 export const reqAddProduct = ({name, desc, price, categoryId, pCategoryId, detail}) =>
   ajax('/manage/product/add', {name, desc, price, categoryId, pCategoryId, detail}, 'POST');
 
+/**
+ * 修改商品
+ * @param name
+ * @param desc
+ * @param price
+ * @param categoryId
+ * @param pCategoryId
+ * @param detail
+ * @param _id
+ * @returns {Q.Promise<any>|Promise<T|never>}
+ */
 export const reqUpdateProduct = ({name, desc, price, categoryId, pCategoryId, detail,_id}) =>
   ajax('/manage/product/update', {name, desc, price, categoryId, pCategoryId, detail,_id}, 'POST');
 
+/**
+ *
+ * @param name
+ * @param id
+ * @returns {Q.Promise<any>|Promise<T|never>}
+ */
+export const reqDeleteProductImg = (name, id) => ajax('/manage/img/delete', {name, id}, 'POST');
