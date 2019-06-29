@@ -150,7 +150,8 @@ export const reqAddRole = (name) => ajax('/manage/role/add',{name},'POST');
  * @param menus
  * @returns {Q.Promise<any>|Promise<T|never>}
  */
-export const reqUpdateRole = (_id,auth_name,menus) => ajax('/manage/role/update',{_id,auth_name,menus},'POST');
+export const reqUpdateRole = (_id,auth_name,menus) =>
+  ajax('/manage/role/update',{_id,auth_name,menus},'POST');
 
 /**
  *

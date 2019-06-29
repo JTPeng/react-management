@@ -96,7 +96,7 @@ class AddUserForm extends Component {
         <Item label='角色分类' labelCol={{span: 6}}  wrapperCol={{span: 15}}>
           {
             getFieldDecorator(
-              'role',{
+              'role_id',{ //
                 rules:[
                   {
                     required:true,message:'角色分类不能为空',
