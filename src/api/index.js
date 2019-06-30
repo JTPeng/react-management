@@ -171,4 +171,11 @@ export const reqGetUsers = () => ajax('/manage/user/list');
 export const reqAddUser = ({username, password, phone, email, role_id}) =>
   ajax('/manage/user/add', {username, password, phone, email, role_id}, 'POST');
 
+/**
+ * 删除用户
+ * @param userId
+ * @returns {Q.Promise<any>|Promise<T|never>}
+ */
+export const reqDelUser = (userId) => ajax('manage/user/delete',{userId},'POST');
 
+export const reqUpdateUser = () => ajax('manage/user/update',{},'POST');

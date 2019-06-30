@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Card, Button, Table, Modal,message } from 'antd';
 import dayjs from "dayjs";
-import {reqGetUsers,reqAddUser} from '../../api';
+import {reqGetUsers,reqAddUser,reqDelUser,reqUpdateUser} from '../../api';
 
 import AddUserForm from './add-user-form';
 import UpdateUserForm from './update-user-form';
@@ -43,13 +43,31 @@ export default class User extends Component {
     })
   };
 
-  updateUser = () => {
+  updateUser = (user) => {
+    const { form } = this.updateUserForm.props;
+    form.validateFields(async (err,values) => {
+      // 搜集表单数据
+      if (!err){
+        // 发送请求
+        const result = await reqUpdateUser(values);
+        if (result){
+          message.success('用户信息修改成功',2);
+          form.resetFields();
+          this.setState({
 
+          })
+        }
+      }
+    });
+    this.user = user;
+    this.setState({
+      isShowUpdateUserModal:true,
+    })
   };
 
   async componentDidMount() {
     const result = await reqGetUsers();
-    console.log(result);
+    // console.log(result);
     if (result){
       this.setState({
         users:result.users,
@@ -61,10 +79,31 @@ export default class User extends Component {
   toggleDisplay = (stateName, stateValue) => {
     return () => this.setState({[stateName]: stateValue})
   };
-
+  delUser =  (user) => {
+    // console.log(e.target.id);
+    Modal.confirm({
+      title: `你确定要删除${user.username}用户吗?`,
+      okText:'确认',
+      cancelText:'取消',
+      onOk: async () => {
+        const result = await reqDelUser(user._id);
+        if (result.status === '0'){
+          message.success('删除成功');
+          // 删除成功后重新发请求、获取用户列表
+          const result = await reqGetUsers();
+          // console.log(result);
+          if (result){
+            this.setState({
+              users:result.users,
+            })
+          }
+        }
+      },
+    });
+  };
   render () {
     const {users, isShowAddUserModal, isShowUpdateUserModal, roles} = this.state;
-
+    const user = this.user;
     const columns = [
       {
         title: '用户名',
@@ -95,8 +134,8 @@ export default class User extends Component {
         title: '操作',
         render: user => {
           return <div>
-            <MyButton onClick={() => {}}>修改</MyButton>
-            <MyButton onClick={() => {}}>删除</MyButton>
+            <MyButton onClick={() => this.updateUser(user)}>修改</MyButton>
+            <MyButton onClick={() => this.delUser(user)}>删除</MyButton>
           </div>
         }
       }
@@ -143,7 +182,7 @@ export default class User extends Component {
           okText='确认'
           cancelText='取消'
         >
-          <UpdateUserForm wrappedComponentRef={(form) => this.updateUserForm = form}/>
+          <UpdateUserForm wrappedComponentRef={(form) => this.updateUserForm = form} user={user} roles={roles}/>
         </Modal>
 
       </Card>
